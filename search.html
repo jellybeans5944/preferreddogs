@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dog Search</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&display=swap" rel="stylesheet"/>
+
+  <style>
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .header-box {
+      padding: 2.5px;
+      font-size: 0.75em;
+      font-weight: 100;
+      font-family: Arial;
+      font-size: 0.8em;
+      width: 99.6%;
+      background-color: #6a0dad;
+      border-radius: 4px;
+      margin: 0;
+      color: white;
+    }
+
+    .header-box h2 {
+      margin: 0.5em 0;
+    }
+
+    .table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      font-size: 0.9em;
+      font-weight: lighter;
+      font-family: sans-serif;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden; /* Important so the child td/th don’t overflow the rounded corners */
+    }
+
+    .table th,
+    .table td {
+      border: 2px solid #ffffff;
+      padding: 12px 15px;
+    }
+
+    .table th {
+      background-color: #cb7eff;
+      text-align: center;
+      color: rgb(0, 0, 0);
+    }
+
+    .table td {
+      background-color: #aa59e0;
+    }
+
+    .search-button-row {
+        display: inline-block;
+        justify-content: center; /* Aligns the button to the left */
+        padding-left: 20px; /* Adjust this value to align under the desired column */
+      }
+
+    .search-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 130px;
+      margin: 7.5px auto;
+      padding: 12px 25px;
+      font-size: 1.0em;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: right;
+    }
+
+    .search-button:hover {
+      background-color: #aa59e0;
+    }
+
+    input,
+    select {
+      width: 125px;
+      padding: 4px;
+      font-size: 1em;
+    }
+
+    #sortInput {
+      width: 150px;
+    }
+
+    /* Visually hidden for accessibility */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      border: 0;
+      padding: 0;
+      white-space: nowrap;
+      clip-path: inset(100%);
+      clip: rect(0 0 0 0);
+      overflow: hidden;
+    }
+
+    .results-table {
+        width: 100%; /* or specify a fixed width like 600px */
+        table-layout: fixed;
+    }
+
+    .results-table td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Customize each column width for search table */
+    .search-table th:nth-child(1),
+    .search-table td:nth-child(1) {
+      width: 182px;
+    }
+
+    .search-table th:nth-child(2),
+    .search-table td:nth-child(2) {
+      width: 182px;
+    }
+
+    .search-table th:nth-child(3),
+    .search-table td:nth-child(3) {
+      width: 150px;
+    }
+
+    .search-table th:nth-child(4),
+    .search-table td:nth-child(4) {
+      width: 200px;
+    }
+
+    .search-table th:nth-child(5),
+    .search-table td:nth-child(5) {
+      width: 150px;
+    }
+
+    /* input box fix in search table */
+    #breedInput{
+        border-radius: 20px;
+    }
+    #zipInput{
+        border-radius: 20px;
+    }
+    #ageMinInput{
+        border-radius: 20px;
+    }
+    #ageMaxInput{
+        border-radius: 20px;
+    }
+    #sortInput{
+        border-radius: 20px;
+    }
+
+    /* Customize each column width for results table */
+    .results-table td:nth-child(1), .results-table th:nth-child(1) {
+      width: 182.5px; /* Photo */
+    }
+
+    .results-table td:nth-child(2), .results-table th:nth-child(2) {
+      width: 182.5px; /* Name */
+    }
+
+    .results-table td:nth-child(3), .results-table th:nth-child(3) {
+      width: 150px; /* Breed */
+    }
+
+    .results-table td:nth-child(4), .results-table th:nth-child(4) {
+      width: 200px; /* Age */
+    }
+
+    .results-table td:nth-child(5), .results-table th:nth-child(5) {
+      width: 150px; /* Zip Code */
+    }
+
+    #paginationControls {
+        margin-top: 20px;
+        font-size: 1.1em;
+        text-align: center;
+      }
+      #paginationControls button:hover {
+        background-color: #8a3bc7; /* lighter version of #6a0dad */
+      }
+      
+      .pagination-container {
+        display: flex;
+        justify-content: center; /* Centers horizontally */
+        align-items: center;     /* Centers vertically */
+        height: auto;            /* Auto height based on content */
+        padding-bottom: 20px;     /* Space from the bottom */
+      }
+
+      #paginationControls button {
+        display: inline-flex;
+        justify-content: center; /* Centers content horizontally */
+        align-items: center;     /* Centers content vertically */
+        border: 2px solid #6a0dad;
+        border-radius: 20px;
+        background-color: #6a0dad;
+        color:#ffffff;
+        width: 75px;
+        height: 50px;
+        padding: 0; /* Removes default padding */
+        font-size: 1em; /* Adjust as needed */
+        margin: 0 5px; /* Space between buttons */
+      }
+      
+      #paginationControls button:disabled {
+        background-color: #aa59e0;
+        cursor: not-allowed;
+      }
+      
+      #paginationControls span {
+        font-weight: bold;
+      }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header-box">
+      <h2>Find your dog today</h2>
+    </div>
+
+    <table class="table search-table">
+      <tr>
+        <th>Breeds (comma-separated)</th>
+        <th>Zip Codes (comma-separated)</th>
+        <th>Age Min</th>
+        <th>Age Max</th>
+        <th>Sort</th>
+      </tr>
+      <tr>
+        <td><input type="text" id="breedInput" placeholder="e.g. Beagle, Husky" /></td>
+        <td><input type="text" id="zipInput" placeholder="e.g. 90210, 10001" /></td>
+        <td><input type="number" id="ageMinInput" min="0" placeholder="e.g. 2" /></td>
+        <td><input type="number" id="ageMaxInput" min="0" placeholder="e.g. 5" /></td>
+        <td>
+          <label for="sortInput" class="visually-hidden">Sort by</label>
+          <select id="sortInput">
+            <option value="">None</option>
+            <option value="breed:asc">Breed ↑</option>
+            <option value="breed:desc">Breed ↓</option>
+            <option value="age:asc">Age ↑</option>
+            <option value="age:desc">Age ↓</option>
+            <option value="name:asc">Name ↑</option>
+            <option value="name:desc">Name ↓</option>
+          </select>
+        </td>
+    </table>
+    <div class="search-button-row">
+        <button class="search-button" onclick="searchDogs()">Search</button>
+    </div>
+    <table class="table results-table">
+      <tr>
+        <th>Photo</th>
+        <th>Name</th>
+        <th>Breed</th>
+        <th>Age</th>
+        <th>Zip Code</th>
+      </tr>
+      <tbody id="results">
+        <!-- JavaScript will insert rows here -->
+      </tbody>
+    </table>
+    <div id="paginationControls">
+        <span id="currentPageDisplay">Page 1</span>
+      <div id="paginationButtons"></div>
+    </div>
+  </div>
+  <script src="search.js"></script>
+</body>
+</html>
